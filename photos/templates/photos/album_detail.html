@@ -25,8 +25,9 @@
         <a href="{{ photo.photo|thumbnail:"800x700" }}" rel="facebox">
             <img src="{{ photo.photo|cropscale:"200x200" }}" alt="">
         </a>
-        <a href="{{ photo.photo.url }}" target="_blank">{{ photo.title }}</a><br>
-        by {{ photo.created_by.get_full_name|default:photo.created_by }}
+        {{ photo.title }}<br>
+        {{ photo.created_by.get_full_name|default:photo.created_by }}, {{ photo.created|date:"d.m.Y" }}<br>
+        <small><a href="{{ photo.photo.url }}" target="_blank">Download</a></small>
     </div>
 {% endfor %}
 </div>

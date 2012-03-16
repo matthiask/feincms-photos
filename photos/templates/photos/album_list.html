@@ -12,6 +12,11 @@
     </thead>
     <tbody>
     {% for object in object_list %}
+        {% ifchanged object.created.year %}
+        <tr>
+            <th colspan="2"><h2>{{ object.created.year }}<hr style="margin:10px 0"></h2></th>
+        </tr>
+        {% endifchanged %}
         <tr class="{% cycle 'odd' 'even' %}">
             {% if batch_form %}<td>{% batch_checkbox batch_form object.id %}</td>{% endif %}
             <th>{% if object.cover_photo %}
@@ -19,7 +24,11 @@
                     <img src="{{ object.cover_photo.photo|cropscale:"200x200" }}" alt="">
                 </a>{% endif %}
             </th>
-            <th><a href="{{ object.get_absolute_url }}">{{ object }}</a></th>
+            <th>
+                <h3><a href="{{ object.get_absolute_url }}">{{ object }}</a></h3>
+                <br>
+                {{ object.created_by.get_full_name }}, {{ object.created|date:"d.m.Y" }}
+            </th>
         </tr>
     {% endfor %}
     </tbody>
