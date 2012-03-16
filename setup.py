@@ -6,13 +6,13 @@ import setuplib
 
 packages, package_data = setuplib.find_packages('towel')
 
-setup(name='towel',
-    version=__import__('towel').__version__,
-    description='Keeping you DRY since 2010',
+setup(name='django-photos',
+    version=__import__('photos').__version__,
+    description='Photo gallery version 42',
     long_description=open(os.path.join(os.path.dirname(__file__), 'README')).read().decode('utf-8'),
     author='Matthias Kestenholz',
     author_email='mk@feinheit.ch',
-    url='http://github.com/matthiask/towel/',
+    url='http://github.com/matthiask/django-photos/',
     license='BSD License',
     platforms=['OS Independent'],
     packages=packages,
