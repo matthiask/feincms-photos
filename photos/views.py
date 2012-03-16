@@ -1,6 +1,10 @@
+from cStringIO import StringIO
+import os
+import zipfile
+
 from django import forms
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.translation import ugettext_lazy, ugettext as _
 
 from towel import modelview
@@ -37,6 +41,11 @@ class AlbumModelView(ModelView):
         return super(AlbumModelView, self).get_query_set(
             request, *args, **kwargs).transform(determine_cover_photo)
 
+    def additional_urls(self):
+        return [
+            (r'%(detail)s/zip/$', self.crud_view_decorator(self.zip)),
+        ]
+
     def detail_view(self, request, *args, **kwargs):
         instance = self.get_object_or_404(request, *args, **kwargs)
 
@@ -61,6 +70,25 @@ class AlbumModelView(ModelView):
             'editing_allowed': self.editing_allowed(request, instance),
             'form': form,
             })
+
+    def zip(self, request, *args, **kwargs):
+        instance = self.get_object_or_404(request, *args, **kwargs)
+
+        buf = StringIO()
+        zf = zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED)
+
+        for photo in instance.photos.all():
+            zf.writestr(
+                os.path.basename(photo.photo.name)
+                , photo.photo.read())
+
+        zf.close()
+        buf.flush()
+
+        response = HttpResponse(buf.getvalue())
+        buf.close()
+        response['Content-Disposition'] = 'attachment; filename=album.zip'
+        return response
 
 
 class PhotoModelView(ModelView):
