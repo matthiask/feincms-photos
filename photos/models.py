@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from towel.managers import SearchManager
+from towel.modelview import ModelViewURLs
 
 
 class AlbumManager(SearchManager):
@@ -29,6 +30,8 @@ class Album(models.Model):
 
     def __unicode__(self):
         return self.title
+
+    urls = ModelViewURLs()
 
 
 class PhotoManager(SearchManager):
@@ -69,6 +72,11 @@ class Photo(models.Model):
 
     def __unicode__(self):
         return self.title
+
+    urls = ModelViewURLs(lambda obj: {'album_id': obj.album_id, 'pk': obj.id})
+
+    def get_absolute_url(self):
+        return self.urls['detail']
 
 
 def determine_cover_photo(queryset):

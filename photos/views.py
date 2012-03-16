@@ -4,7 +4,9 @@ import zipfile
 
 from django import forms
 from django.contrib import messages
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy, ugettext as _
 
 from towel import modelview
@@ -25,6 +27,19 @@ class ModelView(modelview.ModelView):
     """
     ModelView subclass holding behavior specific to the photos app.
     """
+
+    def editing_allowed(self, request, instance):
+        print instance, instance.created_by, request.user, request.user.is_staff
+        if request.user.is_staff or request.user == instance.created_by:
+            return True
+        return False
+
+    def deletion_allowed(self, request, instance):
+        if request.user.is_staff:
+            return True
+        if request.user == instance.created_by:
+            return self.deletion_allowed_if_only(request, instance, [self.model])
+        return False
 
     def get_form(self, request, instance=None, **kwargs):
         return super(ModelView, self).get_form(request, instance=instance,
@@ -92,4 +107,11 @@ class AlbumModelView(ModelView):
 
 
 class PhotoModelView(ModelView):
-    pass
+    def get_query_set(self, request, *args, **kwargs):
+        if request.user.is_staff:
+            return self.model.objects.all()
+        return self.model.objects.filter(Q(is_flagged=False) | Q(created_by=request.user))
+
+    def detail_view(self, request, *args, **kwargs):
+        instance = self.get_object_or_404(request, *args, **kwargs)
+        return redirect(instance.album)

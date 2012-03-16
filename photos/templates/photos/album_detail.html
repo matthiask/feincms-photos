@@ -27,7 +27,12 @@
         </a>
         {{ photo.title }}<br>
         {{ photo.created_by.get_full_name|default:photo.created_by }}, {{ photo.created|date:"d.m.Y" }}<br>
-        <small><a href="{{ photo.photo.url }}" target="_blank">Download</a></small>
+
+        <small>
+            <a href="{{ photo.photo.url }}" target="_blank">Download</a>
+            <a href="{{ photo.urls.edit }}">Edit</a>
+            <a href="{{ photo.urls.delete }}">Delete</a>
+        </small>
     </div>
 {% endfor %}
 </div>
