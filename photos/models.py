@@ -33,6 +33,9 @@ class Album(models.Model):
 
     urls = ModelViewURLs()
 
+    def get_absolute_url(self):
+        return self.urls['detail']
+
 
 class PhotoManager(SearchManager):
     search_fields = ('title', 'album__title', 'album__description',
