@@ -2,6 +2,13 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from towel.managers import SearchManager
+
+
+class AlbumManager(SearchManager):
+    search_fields = ('title', 'description', 'created_by__first_name',
+        'created_by__last_name', 'created_by__email')
+
 
 class Album(models.Model):
     created = models.DateTimeField(_('created'), auto_now_add=True)
@@ -13,6 +20,8 @@ class Album(models.Model):
     title = models.CharField(_('title'), max_length=100)
     description = models.TextField(_('description'), blank=True)
 
+    objects = AlbumManager()
+
     class Meta:
         ordering = ['-created']
         verbose_name = _('album')
@@ -20,6 +29,14 @@ class Album(models.Model):
 
     def __unicode__(self):
         return self.title
+
+
+class PhotoManager(SearchManager):
+    search_fields = ('title', 'album__title', 'album__description',
+        'created_by__first_name', 'created_by__last_name', 'created_by__email')
+
+    def active(self):
+        return self.filter(flagged=False)
 
 
 class Photo(models.Model):
@@ -44,6 +61,8 @@ class Photo(models.Model):
 
     is_flagged = models.BooleanField(_('is flagged'), default=False,
         help_text=_('Flagged photos are only shown to administrators for deletion or un-flagging.'))
+
+    objects = PhotoManager()
 
     class Meta:
         ordering = ['-created']
