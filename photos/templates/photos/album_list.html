@@ -1,0 +1,27 @@
+{% extends "modelview/object_list.html" %}
+
+{% load towel_batch_tags feincms_thumbnail %}
+
+{% block objects %}
+<table class="objects">
+    <thead>
+        <tr>
+            {% if batch_form %}<td><input type="checkbox"></td>{% endif %}
+            <th colspan="2">
+        </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+        <tr class="{% cycle 'odd' 'even' %}">
+            {% if batch_form %}<td>{% batch_checkbox batch_form object.id %}</td>{% endif %}
+            <th>{% if object.cover_photo %}
+                <a href="{{ object.get_absolute_url }}">
+                    <img src="{{ object.cover_photo.photo|cropscale:"200x200" }}" alt="">
+                </a>{% endif %}
+            </th>
+            <th><a href="{{ object.get_absolute_url }}">{{ object }}</a></th>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

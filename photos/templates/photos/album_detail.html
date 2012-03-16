@@ -1,0 +1,43 @@
+{% extends base_template|default:"base.html" %}
+
+{% load feincms_thumbnail i18n modelview_detail towel_form_tags %}
+
+{% block title %}{{ object }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<h2>{{ object }}
+    <small>{{ object.created|date:"d.m.Y" }}, {% trans "created by" %}
+        {{ object.created_by.get_full_name|default:object.created_by }}
+    </small>
+</h2>
+
+{{ object.description|linebreaks }}
+
+<div class="buttons cf">
+    <a href="delete/" class="button">{% trans "delete"|capfirst %}</a>
+    <a href="edit/"class="button">{% trans "edit"|capfirst %}</a>
+</div>
+
+<div class="cf">
+{% for photo in object.photos.active %}
+    <div class="photo">
+        <a href="{{ photo.photo|thumbnail:"800x700" }}" rel="facebox">
+            <img src="{{ photo.photo|cropscale:"200x200" }}" alt="">
+        </a>
+        <a href="{{ photo.photo.url }}" target="_blank">{{ photo.title }}</a><br>
+        by {{ photo.created_by.get_full_name|default:photo.created_by }}
+    </div>
+{% endfor %}
+</div>
+
+<br><br>
+
+<form method="post" action="." enctype="multipart/form-data">{% csrf_token %}
+<h3>{% trans "Upload" %}</h3>
+{% form_errors form %}
+<fieldset>
+    {% for field in form %}{% form_item field %}{% endfor %}
+</fieldset>
+<button type="submit">{% trans "Upload" %}</button>
+</form>
+{% endblock %}

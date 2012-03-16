@@ -36,17 +36,15 @@ class PhotoManager(SearchManager):
         'created_by__first_name', 'created_by__last_name', 'created_by__email')
 
     def active(self):
-        return self.filter(flagged=False)
+        return self.filter(is_flagged=False)
 
 
 class Photo(models.Model):
     def _upload_to(instance, filename):
-        return ('photos/%s/%s_%s' % (
-            instance.asset.pk,
-            instance.version,
+        return ('photos/%s/%s' % (
+            instance.album_id,
             filename,
             )).lower()
-
 
     created = models.DateTimeField(_('created'), auto_now_add=True)
     modified = models.DateTimeField(_('modified'), auto_now=True)
@@ -71,3 +69,16 @@ class Photo(models.Model):
 
     def __unicode__(self):
         return self.title
+
+
+def determine_cover_photo(queryset):
+    """
+    Transform method to attach cover photos to a list of albums
+
+    Usage::
+
+        Album.objects.transform(determine_cover_photo)[:20]
+    """
+    albums = dict((obj.id, obj) for obj in queryset)
+    for photo in Photo.objects.filter(album__in=albums.keys()).reverse():
+        albums[photo.album_id].cover_photo = photo
