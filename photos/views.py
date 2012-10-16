@@ -57,7 +57,7 @@ class AlbumModelView(ModelView):
 
     def additional_urls(self):
         return [
-            (r'%(detail)s/zip/$', self.crud_view_decorator(self.zip)),
+            (r'^%(detail)s/zip/$', self.crud_view_decorator(self.zip)),
         ]
 
     def detail_view(self, request, *args, **kwargs):
