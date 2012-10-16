@@ -29,7 +29,6 @@ class ModelView(modelview.ModelView):
     """
 
     def editing_allowed(self, request, instance):
-        print instance, instance.created_by, request.user, request.user.is_staff
         if request.user.is_staff or request.user == instance.created_by:
             return True
         return False
