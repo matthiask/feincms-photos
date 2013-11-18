@@ -9,13 +9,13 @@ def read(filename):
 
 
 setup(
-    name='django-photos',
+    name='feincms-photos',
     version=__import__('photos').__version__,
     description='Photo gallery version 42',
     long_description=read('README'),
     author='Matthias Kestenholz',
     author_email='mk@feinheit.ch',
-    url='http://github.com/matthiask/django-photos/',
+    url='http://github.com/matthiask/feincms-photos/',
     license='BSD License',
     platforms=['OS Independent'],
     packages=find_packages(
