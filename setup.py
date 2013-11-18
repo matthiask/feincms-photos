@@ -1,22 +1,43 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
 import os
-import setuplib
+from setuptools import setup, find_packages
 
-packages, package_data = setuplib.find_packages('towel')
 
-setup(name='django-photos',
+def read(filename):
+    return open(os.path.join(os.path.dirname(__file__), filename)).read()
+
+
+setup(
+    name='django-photos',
     version=__import__('photos').__version__,
     description='Photo gallery version 42',
-    long_description=open(os.path.join(os.path.dirname(__file__), 'README')).read().decode('utf-8'),
+    long_description=read('README'),
     author='Matthias Kestenholz',
     author_email='mk@feinheit.ch',
     url='http://github.com/matthiask/django-photos/',
     license='BSD License',
     platforms=['OS Independent'],
-    packages=packages,
-    package_data=package_data,
+    packages=find_packages(
+        exclude=['tests', 'example'],
+    ),
+    package_data={
+        '': ['*.html', '*.txt'],
+        'photos': [
+            'locale/*/*/*.*',
+            'static/photos/*.*',
+            'static/photos/*/*.*',
+            'templates/*.*',
+            'templates/*/*.*',
+            'templates/*/*/*.*',
+            'templates/*/*/*/*.*',
+        ],
+    },
+    install_requires=[
+        'Django>=1.4.2',
+        'FeinCMS',
+        'towel',
+    ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
@@ -25,6 +46,11 @@ setup(name='django-photos',
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        # 'Programming Language :: Python :: 3',
+        # 'Programming Language :: Python :: 3.3',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
