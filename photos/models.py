@@ -64,7 +64,8 @@ class Photo(models.Model):
     photo = models.ImageField(_('photo'), upload_to=_upload_to)
 
     is_flagged = models.BooleanField(_('is flagged'), default=False,
-        help_text=_('Flagged photos are only shown to administrators for deletion or un-flagging.'))
+        help_text=_('Flagged photos are only shown to administrators for'
+            ' deletion or un-flagging.'))
 
     objects = PhotoManager()
 

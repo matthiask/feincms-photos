@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy, ugettext as _
 
 from towel import modelview
 
-from photos.models import Album, Photo, determine_cover_photo
+from photos.models import Photo, determine_cover_photo
 
 
 class PhotoUploadForm(forms.ModelForm):
@@ -37,7 +37,8 @@ class ModelView(modelview.ModelView):
         if request.user.is_staff:
             return True
         if request.user == instance.created_by:
-            return self.deletion_allowed_if_only(request, instance, [self.model])
+            return self.deletion_allowed_if_only(
+                request, instance, [self.model])
         return False
 
     def get_form(self, request, instance=None, **kwargs):
@@ -73,7 +74,8 @@ class AlbumModelView(ModelView):
                 if not photo.title:
                     photo.title = photo.photo.name
                 photo.save()
-                messages.success(request, _('The photo has been successfully uploaded.'))
+                messages.success(
+                    request, _('The photo has been successfully uploaded.'))
 
                 return HttpResponseRedirect('.')
         else:
@@ -92,9 +94,7 @@ class AlbumModelView(ModelView):
         zf = zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED)
 
         for photo in instance.photos.all():
-            zf.writestr(
-                os.path.basename(photo.photo.name)
-                , photo.photo.read())
+            zf.writestr(os.path.basename(photo.photo.name), photo.photo.read())
 
         zf.close()
         buf.flush()
@@ -109,7 +109,9 @@ class PhotoModelView(ModelView):
     def get_query_set(self, request, *args, **kwargs):
         if request.user.is_staff:
             return self.model.objects.all()
-        return self.model.objects.filter(Q(is_flagged=False) | Q(created_by=request.user))
+        return self.model.objects.filter(
+            Q(is_flagged=False)
+            | Q(created_by=request.user))
 
     def detail_view(self, request, *args, **kwargs):
         instance = self.get_object_or_404(request, *args, **kwargs)
