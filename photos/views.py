@@ -15,8 +15,8 @@ from photos.models import Photo, determine_cover_photo
 
 
 class PhotoUploadForm(forms.ModelForm):
-    title = forms.CharField(max_length=100, label=ugettext_lazy('title'),
-        required=False)
+    title = forms.CharField(
+        max_length=100, label=ugettext_lazy('title'), required=False)
 
     class Meta:
         fields = ('photo', 'title')
@@ -42,8 +42,8 @@ class ModelView(modelview.ModelView):
         return False
 
     def get_form(self, request, instance=None, **kwargs):
-        return super(ModelView, self).get_form(request, instance=instance,
-            exclude=('created_by',))
+        return super(ModelView, self).get_form(
+            request, instance=instance, exclude=('created_by',))
 
     def save_model(self, request, instance, form, change):
         if not change:

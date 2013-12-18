@@ -7,7 +7,8 @@ from towel.modelview import ModelViewURLs
 
 
 class AlbumManager(SearchManager):
-    search_fields = ('title', 'description', 'created_by__first_name',
+    search_fields = (
+        'title', 'description', 'created_by__first_name',
         'created_by__last_name', 'created_by__email')
 
 
@@ -15,8 +16,8 @@ class Album(models.Model):
     created = models.DateTimeField(_('created'), auto_now_add=True)
     modified = models.DateTimeField(_('modified'), auto_now=True)
 
-    created_by = models.ForeignKey(User, related_name='+',
-        verbose_name=_('created by'))
+    created_by = models.ForeignKey(
+        User, related_name='+', verbose_name=_('created by'))
 
     title = models.CharField(_('title'), max_length=100)
     description = models.TextField(_('description'), blank=True)
@@ -38,7 +39,8 @@ class Album(models.Model):
 
 
 class PhotoManager(SearchManager):
-    search_fields = ('title', 'album__title', 'album__description',
+    search_fields = (
+        'title', 'album__title', 'album__description',
         'created_by__first_name', 'created_by__last_name', 'created_by__email')
 
     def active(self):
@@ -55,16 +57,18 @@ class Photo(models.Model):
     created = models.DateTimeField(_('created'), auto_now_add=True)
     modified = models.DateTimeField(_('modified'), auto_now=True)
 
-    created_by = models.ForeignKey(User, related_name='+',
-        verbose_name=_('created by'))
+    created_by = models.ForeignKey(
+        User, related_name='+', verbose_name=_('created by'))
 
-    album = models.ForeignKey(Album, related_name='photos',
-        verbose_name=_('album'))
+    album = models.ForeignKey(
+        Album, related_name='photos', verbose_name=_('album'))
     title = models.CharField(_('title'), max_length=100)
     photo = models.ImageField(_('photo'), upload_to=_upload_to)
 
-    is_flagged = models.BooleanField(_('is flagged'), default=False,
-        help_text=_('Flagged photos are only shown to administrators for'
+    is_flagged = models.BooleanField(
+        _('is flagged'), default=False,
+        help_text=_(
+            'Flagged photos are only shown to administrators for'
             ' deletion or un-flagging.'))
 
     objects = PhotoManager()
