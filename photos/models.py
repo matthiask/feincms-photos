@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from towel.managers import SearchManager
@@ -12,6 +13,7 @@ class AlbumManager(SearchManager):
         'created_by__last_name', 'created_by__email')
 
 
+@python_2_unicode_compatible
 class Album(models.Model):
     created = models.DateTimeField(_('created'), auto_now_add=True)
     modified = models.DateTimeField(_('modified'), auto_now=True)
@@ -29,7 +31,7 @@ class Album(models.Model):
         verbose_name = _('album')
         verbose_name_plural = _('albums')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     urls = ModelViewURLs()
@@ -54,6 +56,7 @@ def _upload_to(instance, filename):
         )).lower()
 
 
+@python_2_unicode_compatible
 class Photo(models.Model):
     created = models.DateTimeField(_('created'), auto_now_add=True)
     modified = models.DateTimeField(_('modified'), auto_now=True)
@@ -79,7 +82,7 @@ class Photo(models.Model):
         verbose_name = _('photo')
         verbose_name_plural = _('photos')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     urls = ModelViewURLs(lambda obj: {'album_id': obj.album_id, 'pk': obj.id})
