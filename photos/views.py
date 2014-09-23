@@ -1,4 +1,4 @@
-from cStringIO import StringIO
+from io import BytesIO
 import os
 import zipfile
 
@@ -90,7 +90,7 @@ class AlbumModelView(ModelView):
     def zip(self, request, *args, **kwargs):
         instance = self.get_object_or_404(request, *args, **kwargs)
 
-        buf = StringIO()
+        buf = BytesIO()
         zf = zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED)
 
         for photo in instance.photos.all():
