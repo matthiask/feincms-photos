@@ -47,13 +47,14 @@ class PhotoManager(SearchManager):
         return self.filter(is_flagged=False)
 
 
-class Photo(models.Model):
-    def _upload_to(instance, filename):
-        return ('photos/%s/%s' % (
-            instance.album_id,
-            filename,
-            )).lower()
+def _upload_to(instance, filename):
+    return ('photos/%s/%s' % (
+        instance.album_id,
+        filename,
+        )).lower()
 
+
+class Photo(models.Model):
     created = models.DateTimeField(_('created'), auto_now_add=True)
     modified = models.DateTimeField(_('modified'), auto_now=True)
 
